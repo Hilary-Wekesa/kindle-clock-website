@@ -1,2 +1,2 @@
 # kindle-clock-website
-Simple Kindle Clock Wesbite
+Simple Kindle Clock Website
