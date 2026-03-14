@@ -24,15 +24,19 @@
     flex-direction: column;
   }
 
+  html, body {
+    height: 100%;
+  }
+
   .container {
     text-align: center;
     padding: 2rem;
+    width: 100%;
   }
 
   .day {
     font-family: 'DM Mono', monospace;
     font-weight: 300;
-    font-size: clamp(0.75rem, 2.5vw, 1rem);
     letter-spacing: 0.35em;
     text-transform: uppercase;
     color: #8a8070;
@@ -41,7 +45,6 @@
 
   .time {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(5rem, 22vw, 11rem);
     line-height: 1;
     letter-spacing: -0.02em;
     color: #1a1814;
@@ -51,13 +54,11 @@
   .date {
     font-family: 'DM Mono', monospace;
     font-weight: 300;
-    font-size: clamp(0.75rem, 2.5vw, 1rem);
     letter-spacing: 0.2em;
     color: #8a8070;
   }
 
   .divider {
-    width: 32px;
     height: 1px;
     background: #c8bfb0;
     margin: 1.5rem auto;
@@ -92,8 +93,27 @@
     document.getElementById('date').textContent = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
   }
 
+  function resize() {
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var base = Math.min(vw, vh);
+
+    document.getElementById('time').style.fontSize = (base * 0.28) + 'px';
+    document.getElementById('day').style.fontSize = (base * 0.038) + 'px';
+    document.getElementById('date').style.fontSize = (base * 0.038) + 'px';
+
+    var dividers = document.querySelectorAll('.divider');
+    for (var i = 0; i < dividers.length; i++) {
+      dividers[i].style.width = (base * 0.08) + 'px';
+      dividers[i].style.marginTop = (vh * 0.04) + 'px';
+      dividers[i].style.marginBottom = (vh * 0.04) + 'px';
+    }
+  }
+
   update();
+  resize();
   setInterval(update, 10000);
+  window.addEventListener('resize', resize);
 </script>
 </body>
 </html>
