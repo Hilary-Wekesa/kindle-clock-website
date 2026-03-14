@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clock</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=EB+Garamond:wght@400;500&family=Crimson+Pro:wght@300;400&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -32,7 +32,7 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Mono', monospace;
+    font-family: 'Crimson Pro', Georgia, serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -48,32 +48,31 @@
   }
 
   .day {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Crimson Pro', Georgia, serif;
     font-weight: 300;
-    letter-spacing: 0.35em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--muted);
     transition: color 0.4s ease;
   }
 
   .time {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'EB Garamond', 'Times New Roman', serif;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text);
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    transition: color 0.4s ease, opacity 0.2s ease;
+    transition: color 0.4s ease;
   }
-
-  .time.tick { opacity: 0.25; }
 
   .ampm {
     display: block;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Crimson Pro', Georgia, serif;
     font-weight: 300;
-    letter-spacing: 0.25em;
+    font-style: italic;
+    letter-spacing: 0.18em;
     color: var(--muted);
     margin-top: 0.4em;
     min-height: 1em;
@@ -81,9 +80,9 @@
   }
 
   .date {
-    font-family: 'DM Mono', monospace;
-    font-weight: 300;
-    letter-spacing: 0.2em;
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: 0.06em;
     color: var(--muted);
     transition: color 0.4s ease;
   }
@@ -149,11 +148,6 @@
     var m   = now.getMinutes();
 
     if (m !== lastMin) {
-      if (lastMin !== -1) {
-        var el = document.getElementById('time');
-        el.classList.add('tick');
-        setTimeout(function() { el.classList.remove('tick'); }, 220);
-      }
       lastMin = m;
     }
 
