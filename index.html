@@ -96,10 +96,8 @@
     transition: background 0.4s ease;
   }
 
-  .theme-btn {
+  .ui-btn {
     position: fixed;
-    top: 1.2rem;
-    right: 1.2rem;
     background: var(--btn-bg);
     border: none;
     border-radius: 50%;
@@ -112,12 +110,16 @@
     line-height: 1;
   }
 
-  .theme-btn:hover { background: var(--btn-hover); }
+  .ui-btn:hover { background: var(--btn-hover); }
+
+  #themeBtn      { top: 1.2rem; right: 1.2rem; }
+  #fullscreenBtn { top: 1.2rem; left:  1.2rem; }
 </style>
 </head>
 <body>
 
-<button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode"></button>
+<button class="ui-btn" id="fullscreenBtn" aria-label="Toggle fullscreen"></button>
+<button class="ui-btn" id="themeBtn" aria-label="Toggle dark mode"></button>
 
 <div class="container">
   <div class="day" id="day"></div>
@@ -189,10 +191,12 @@
 
     var btnSize = Math.max(40, base * 0.07) + 'px';
     var btnFont = Math.max(16, base * 0.032) + 'px';
-    var btn = document.getElementById('themeBtn');
-    btn.style.width    = btnSize;
-    btn.style.height   = btnSize;
-    btn.style.fontSize = btnFont;
+    ['themeBtn', 'fullscreenBtn'].forEach(function(id) {
+      var btn = document.getElementById(id);
+      btn.style.width    = btnSize;
+      btn.style.height   = btnSize;
+      btn.style.fontSize = btnFont;
+    });
   }
 
   function setTheme(dark) {
@@ -201,11 +205,32 @@
     document.getElementById('themeBtn').textContent = dark ? '☀' : '☽';
   }
 
-  async function requestWakeLock() {
-    if ('wakeLock' in navigator) {
-      try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+  }
+
+  function updateFullscreenIcon() {
+    var btn = document.getElementById('fullscreenBtn');
+    btn.textContent = isFullscreen() ? '✕' : '⤢';
+    btn.title       = isFullscreen() ? 'Exit fullscreen' : 'Enter fullscreen';
+  }
+
+  function toggleFullscreen() {
+    if (isFullscreen()) {
+      var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+      if (exit) exit.call(document);
+    } else {
+      var el = document.documentElement;
+      var enter = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+      if (enter) enter.call(el);
     }
   }
+
+  document.addEventListener('fullscreenchange',       updateFullscreenIcon);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+  document.addEventListener('mozfullscreenchange',    updateFullscreenIcon);
+
+  document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
   document.getElementById('themeBtn').addEventListener('click', function() {
     setTheme(!isDark);
@@ -217,12 +242,19 @@
     update();
   });
 
+  async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+    }
+  }
+
   document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') requestWakeLock();
   });
 
   requestWakeLock();
   setTheme(false);
+  updateFullscreenIcon();
   update();
   resize();
   setInterval(update, 5000);
